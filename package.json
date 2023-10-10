@@ -1,4 +1,10 @@
 {
   "dependencies": {
     "@google-cloud/speech": "^5.4.0",
-    "@google-cloud/text-to-speech": "^4.2
+    "@google-cloud/text-to-speech": "^4.2.1",
+    "chatgpt": "^5.1.2",
+    "immer": "^9.0.21",
+    "lowlight": "^2.8.1",
+    "natural": "^6.2.0",
+    "node-record-lpcm16": "^1.0.1",
+    "prismjs": "^1.29.0",
