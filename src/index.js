@@ -90,3 +90,146 @@ function ConversationThread(props) {
   let [isBotTyping, set_isBotTyping] = useState(false);
   let messageCollection = createCollection([]);
   let conversationMessagesContext = [];
+  let client = useClient();
+
+  // TODO: actually fetch message history
+  fetchMessageHistory()
+    .then((history) => { });
+
+  let onSubmit = createHandler(async (userText) => {
+    scrollToBottom();
+    set_isThreadEmpty(false);
+    set_isBotTyping(true);
+
+    conversationMessagesContext.push({
+      role: 'user',
+      content: userText
+    })
+
+    let assistantMessageContext = {
+      role: 'assistant',
+      content: ''
+    };
+
+    let tokenizer = new Tokenizer();
+
+    API_requestCompletionStream(API_KEY, conversationMessagesContext, (rawToken) => {
+      tokenizer.feedInputToken(rawToken);
+
+      scrollToBottom();
+
+      if (rawToken != '[DONE]') {
+        assistantMessageContext.content += rawToken;
+      } else {
+        onFinished();
+      }
+    });
+
+    conversationMessagesContext.push(assistantMessageContext);
+
+    // add the user message to the stream
+    messageCollection.push({
+      role: 'user',
+      tokenizer: createTokenizerFromText(userText)
+    });
+
+    // add the bot message to the stream
+    messageCollection.push({
+      role: 'assistant',
+      tokenizer: tokenizer
+    });
+  });
+
+  let onFinished = () => {
+    set_isBotTyping(false);
+
+    // TODO: do this in a post-render hook of the setState above (so we don't need the setTimeout)
+    client.exec($c(() => {
+      setTimeout(() => {
+        document.getElementById("textbox").focus();
+      }, 10);
+    }));
+  }
+
+  // create a debounced function that scrolls the window to the bottom
+  let scrollToBottom = throttle(300, () => {
+    client.exec($c(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }));
+  });
+
+  let [transcriptionText, set_transcriptionText] = useState('');
+
+  return <>
+    <div style={{ background: "#555" }}>
+      <div style={{ margin: "0 auto", width: "100%", maxWidth: "600px", padding: '10px' }}>
+        <div style={{ color: "#aaa", fontSize: "12px", fontWeight: "600" }}>SenimanGPT</div>
+      </div>
+    </div>
+    {isThreadEmpty() ? <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: -1 }}>
+      <div style={{ fontSize: "30px", color: '#777' }}>
+        SenimanGPT
+      </div>
+    </div> : null}
+    <div style={{ paddingBottom: "120px" }}>
+      {messageCollection.map(message => <Message role={message.role} tokenizer={message.tokenizer} />)}
+    </div>
+    <div style={{ width: "100%", maxWidth: "600px", margin: '0 auto', position: 'fixed', bottom: '0px', left: '50%', transform: 'translateX(-50%)' }}>
+      <div style={{
+        padding: '10px',
+      }}>
+        <textarea id="textbox" value={transcriptionText()} disabled={isBotTyping()} placeholder={isBotTyping() ? "Bot is writing..." : "Write a message to the bot.."} onKeyDown={$c(e => {
+          // get value from textarea with whitespace trimmed
+          let value = e.target.value.trim();
+
+          // submit on enter (make sure Shift isn't pressed)
+          if (e.key === 'Enter' && !e.shiftKey && value) {
+            $s(onSubmit)(value);
+            e.target.value = '';
+            e.preventDefault();
+          }
+        })}
+          style={{ opacity: isBotTyping() ? '0.3' : '1.0', borderRadius: '5px', padding: '10px', height: 'auto', background: '#666', border: 'none', width: '100%', color: '#fff', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'none' }}
+        ></textarea>
+        {false && <div style={{ position: 'absolute', right: '15px', top: '15px' }}>
+          <Microphone onTranscription={(transcription) => {
+            set_transcriptionText(transcription);
+          }} />
+        </div>
+        }
+        <div style={{ fontSize: '10px', color: '#666', paddingTop: '5px' }}>Press Enter to Submit</div>
+      </div>
+    </div>
+  </>;
+}
+
+function Body() {
+  return <div>
+    <Link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset.css@2.0.2/reset.min.css" />
+    <Link rel="stylesheet" href="https://unpkg.com/prismjs@0.0.1/themes/prism-tomorrow.css" />
+    <Link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" />
+    <Style text={`
+        body {
+          background:#444;
+          font-family: Inter;
+        }
+
+        textarea::-webkit-input-placeholder {
+          color: #999;
+        }
+
+        textarea:focus {
+          outline: none;
+        }
+      `} />
+    <ConversationThread />
+  </div>
+}
+
+let server = createServer({ Body });
+server.listen(3020);
+
+console.log("Server listening on port 3020");
