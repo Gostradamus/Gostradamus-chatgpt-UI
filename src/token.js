@@ -17,4 +17,13 @@ export class Tokenizer {
     this.backtickCount = 0;
   }
 
-  tokeniz
+  tokenize2(textToken) {
+
+    if (textToken === '[DONE]') {
+      return [this.tokenBuffer, textToken];
+    }
+
+    let returnTokens = [];
+    let tokenLength = textToken.length;
+
+    let flushBuffer
