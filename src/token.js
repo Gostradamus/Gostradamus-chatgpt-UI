@@ -7,4 +7,14 @@
  - single-backtick (codespans)
  - newlines (paragraphs) 
 
- are given to the UI layer as single complete tokens. This enables easier token handling logic within the 
+ are given to the UI layer as single complete tokens. This enables easier token handling logic within the UI layer.
+*/
+export class Tokenizer {
+  constructor() {
+    this.callback = null;
+    this.queue = [];
+    this.tokenBuffer = '';
+    this.backtickCount = 0;
+  }
+
+  tokeniz
