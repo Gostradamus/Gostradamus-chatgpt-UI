@@ -26,4 +26,12 @@ export class Tokenizer {
     let returnTokens = [];
     let tokenLength = textToken.length;
 
-    let flushBuffer
+    let flushBuffer = () => {
+      if (this.tokenBuffer) {
+        returnTokens.push(this.tokenBuffer);
+        this.tokenBuffer = '';
+      }
+    }
+
+    for (let i = 0; i < tokenLength; i++) {
+      let char = textTok
