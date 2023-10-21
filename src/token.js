@@ -34,4 +34,12 @@ export class Tokenizer {
     }
 
     for (let i = 0; i < tokenLength; i++) {
-      let char = textTok
+      let char = textToken[i];
+
+      if (char === '`') {
+        if (this.backtickCount === 0) {
+          flushBuffer();
+        }
+
+        this.backtickCount++;
+        this.to
