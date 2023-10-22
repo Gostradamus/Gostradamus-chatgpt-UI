@@ -55,4 +55,13 @@ export class Tokenizer {
           flushBuffer();
         }
 
-        if (char === '\n') 
+        if (char === '\n') {
+          flushBuffer();
+          returnTokens.push(char);
+        } else {
+          this.tokenBuffer += char;
+        }
+      }
+    }
+
+    if (this.backtickCount === 
