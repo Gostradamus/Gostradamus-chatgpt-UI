@@ -78,4 +78,11 @@ export class Tokenizer {
       return;
     }
 
-    this.
+    this.callback(tokens);
+  }
+
+  onResultTokens(callback) {
+    this.callback = callback;
+
+    while (this.queue.length > 0) {
+      this.processToken(this.queue.shift())
