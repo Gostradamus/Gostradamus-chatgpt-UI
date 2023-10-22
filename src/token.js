@@ -49,4 +49,10 @@ export class Tokenizer {
           flushBuffer();
         }
       } else {
-        // reset backtick count (and flush) if it s
+        // reset backtick count (and flush) if it sees a non-backtick character
+        if (this.backtickCount > 0) {
+          this.backtickCount = 0;
+          flushBuffer();
+        }
+
+        if (char === '\n') 
