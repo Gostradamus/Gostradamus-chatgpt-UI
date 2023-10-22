@@ -42,4 +42,11 @@ export class Tokenizer {
         }
 
         this.backtickCount++;
-        this.to
+        this.tokenBuffer += char;
+
+        if (this.backtickCount === 3) {
+          this.backtickCount = 0;
+          flushBuffer();
+        }
+      } else {
+        // reset backtick count (and flush) if it s
