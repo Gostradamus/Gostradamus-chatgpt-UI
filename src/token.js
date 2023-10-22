@@ -64,4 +64,18 @@ export class Tokenizer {
       }
     }
 
-    if (this.backtickCount === 
+    if (this.backtickCount === 0) {
+      flushBuffer();
+    }
+
+    return returnTokens;
+  }
+
+  processToken(textToken) {
+    let tokens = this.tokenize2(textToken);
+
+    if (!tokens) {
+      return;
+    }
+
+    this.
