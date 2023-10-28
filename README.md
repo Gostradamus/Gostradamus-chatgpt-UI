@@ -10,3 +10,11 @@ https://user-images.githubusercontent.com/510503/231417407-2ce80242-0109-44cc-87
 npm install
 ```
 3. Execute the build script
+```bash
+npm run build
+```
+4. Now, start the server. Ensure to pass your OpenAI API key as an environmental variable)
+```bash
+OPENAI_API_KEY=<...> npm start
+```
+O
