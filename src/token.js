@@ -85,4 +85,15 @@ export class Tokenizer {
     this.callback = callback;
 
     while (this.queue.length > 0) {
-      this.processToken(this.queue.shift())
+      this.processToken(this.queue.shift());
+    }
+  }
+
+  feedInputToken(textToken) {
+    if (!this.callback) {
+      this.queue.push(textToken);
+    } else {
+      this.processToken(textToken);
+    }
+  }
+}
