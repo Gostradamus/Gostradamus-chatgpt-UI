@@ -17,4 +17,9 @@ npm run build
 ```bash
 OPENAI_API_KEY=<...> npm start
 ```
-O
+Obtain your OpenAI API key [here](https://platform.openai.com/account/api-keys).
+
+5. Finally, access the application at `http://localhost:3020`
+
+## Evaluating Network Performance
+In contrast
