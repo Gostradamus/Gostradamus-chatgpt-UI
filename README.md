@@ -22,4 +22,8 @@ Obtain your OpenAI API key [here](https://platform.openai.com/account/api-keys).
 5. Finally, access the application at `http://localhost:3020`
 
 ## Evaluating Network Performance
-In contrast
+In contrast with OpenAI's native `chat.openai.com` frontend:
+
+#### OpenAI
+- Downloads an initial 600KB of JS
+- ~160KB of data sent per message (includes a short code block and a 5 sentence paragrap
