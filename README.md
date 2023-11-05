@@ -26,4 +26,8 @@ In contrast with OpenAI's native `chat.openai.com` frontend:
 
 #### OpenAI
 - Downloads an initial 600KB of JS
-- ~160KB of data sent per message (includes a short code block and a 5 sentence paragrap
+- ~160KB of data sent per message (includes a short code block and a 5 sentence paragraph)
+
+#### Seniman
+- Requires just 3KB of JS upfront and roughly 3KB of websocket messages for setting up UI
+- Merely ~5KB of WS data sent per message of the same content size.
